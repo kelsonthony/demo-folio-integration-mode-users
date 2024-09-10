@@ -31,6 +31,7 @@
         <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
         <poi-ooxml.version>5.2.3</poi-ooxml.version> <!-- change for <version>5.3.0</version> -->
         <modelmapper.version>2.4.4</modelmapper.version>
+        <postgres.version>42.2.5</postgres.version>
     </properties>
     <dependencies>
         <dependency>
@@ -44,6 +45,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgres.version}</version><!--$NO-MVN-MAN-VER$-->
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -24,7 +24,7 @@ public class UserItemReader implements ItemReader<UserDTO> {
 
     private static final Logger logger = LoggerFactory.getLogger(UserItemReader.class);
 
-    private int currentRow = 6;
+    private int currentRow = 2;
     private int maxRow;
     private Sheet sheet;
 
@@ -64,8 +64,8 @@ public class UserItemReader implements ItemReader<UserDTO> {
         int positionColumnIndex = 0;
 
         // Pular todas as linhas antes da linha 6
-        if (currentRow < 6) {
-            currentRow = 6;  // Força começar a leitura da linha 6
+        if (currentRow < 2) {
+            currentRow = 2;  // Força começar a leitura da linha 6
         }
 
         if (currentRow > sheet.getLastRowNum()) {
@@ -82,25 +82,25 @@ public class UserItemReader implements ItemReader<UserDTO> {
 
         logger.debug("Processando a linha {}", currentRow - 1);
 
-        IntStream.range(0, 39)
-                .forEach(i -> {
-                    Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-                    String cellValue = ExcelUtil.getCellValueAsString(cell).trim();  // Aplica trim() para remover espaços no início e no fim
-                    logger.debug("Coluna {}: valor = {}", i, cellValue);
+//        IntStream.range(0, 39)
+//                .forEach(i -> {
+//                    Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+//                    String cellValue = ExcelUtil.getCellValueAsString(cell).trim();  // Aplica trim() para remover espaços no início e no fim
+//                    logger.debug("Coluna {}: valor = {}", i, cellValue);
+//
+//                    // Verifica se estamos na coluna de 'position'
+//                    if (i == positionColumnIndex) {  // Ajuste para o índice correto da coluna 'position'
+//                        String positionValue = cellValue;
+//                        if (!positionValue.isEmpty()) {
+//                            userDTO.setPosition(EnumUtil.getPositionEnum(positionValue));
+//                        }
+//                    }
+//
+//                    // Continua o mapeamento de outras colunas no DTO, já com o valor tratado
+//                    cellMapper.map(userDTO, i, cellValue);
+//                });
 
-                    // Verifica se estamos na coluna de 'position'
-                    if (i == positionColumnIndex) {  // Ajuste para o índice correto da coluna 'position'
-                        String positionValue = cellValue;
-                        if (!positionValue.isEmpty()) {
-                            userDTO.setPosition(EnumUtil.getPositionEnum(positionValue));
-                        }
-                    }
-
-                    // Continua o mapeamento de outras colunas no DTO, já com o valor tratado
-                    cellMapper.map(userDTO, i, cellValue);
-                });
-
-        System.out.println("RelCoopReportDTO reader: " + userDTO);
+        System.out.println("userDTO reader: " + userDTO);
         return userDTO;
     }
 

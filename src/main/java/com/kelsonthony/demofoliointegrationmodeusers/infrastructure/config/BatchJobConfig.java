@@ -16,7 +16,6 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.support.ListItemWriter;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +30,7 @@ public class BatchJobConfig {
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
-    private final ListItemWriter<UserDTO> userItemWriter;
+    private final UserItemWriter userItemWriter;
     private final TaskExecutor taskExecutor;
     private final SkipPolicy skipPolicy;
     private final SkipListener<UserDTO, Number> skipListener;
@@ -41,8 +40,9 @@ public class BatchJobConfig {
 
     public BatchJobConfig(JobRepository jobRepository,
                           PlatformTransactionManager transactionManager,
-                          ListItemWriter<UserDTO> userItemWriter,
-                          TaskExecutor taskExecutor, SkipPolicy skipPolicy,
+                          UserItemWriter userItemWriter,
+                          TaskExecutor taskExecutor,
+                          SkipPolicy skipPolicy,
                           SkipListener<UserDTO, Number> skipListener,
                           JobCompletionNotificationListener jobCompletionListener,
                           ItemProcessor<UserDTO, UserDTO> processor,
