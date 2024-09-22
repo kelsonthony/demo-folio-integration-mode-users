@@ -2,9 +2,9 @@ package com.kelsonthony.demofoliointegrationmodeusers.infrastructure.config;
 
 import com.kelsonthony.demofoliointegrationmodeusers.app.dto.UserDTO;
 import com.kelsonthony.demofoliointegrationmodeusers.batch.writer.UserItemWriter;
-import com.kelsonthony.demofoliointegrationmodeusers.infrastructure.listener.JobCompletionNotificationListener;
 import com.kelsonthony.demofoliointegrationmodeusers.infrastructure.partition.ColumnRangePartitioner;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -34,7 +34,7 @@ public class BatchJobConfig {
     private final TaskExecutor taskExecutor;
     private final SkipPolicy skipPolicy;
     private final SkipListener<UserDTO, Number> skipListener;
-    private final JobCompletionNotificationListener jobCompletionListener;
+    private final JobExecutionListener jobCompletionListener;
     private final ItemProcessor<UserDTO, UserDTO> processor;
     private final ItemReader<UserDTO> reader;
 
@@ -44,7 +44,7 @@ public class BatchJobConfig {
                           TaskExecutor taskExecutor,
                           SkipPolicy skipPolicy,
                           SkipListener<UserDTO, Number> skipListener,
-                          JobCompletionNotificationListener jobCompletionListener,
+                          JobExecutionListener jobCompletionListener,
                           ItemProcessor<UserDTO, UserDTO> processor,
                           ItemReader<UserDTO> reader) {
         this.jobRepository = jobRepository;
@@ -99,7 +99,7 @@ public class BatchJobConfig {
 
     @Bean
     public Job runJob() {
-        return new JobBuilder("importReports", jobRepository)
+        return new JobBuilder("importUsers", jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .listener(jobCompletionListener)
                 .flow(masterStep())
