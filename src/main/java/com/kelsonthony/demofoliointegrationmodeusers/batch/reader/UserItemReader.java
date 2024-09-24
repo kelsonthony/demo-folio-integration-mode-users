@@ -24,7 +24,7 @@ public class UserItemReader implements ItemReader<UserDTO> {
 
     private static final Logger logger = LoggerFactory.getLogger(UserItemReader.class);
 
-    private int currentRow = 2;
+    private int currentRow = 1;
     private int maxRow;
     private Sheet sheet;
 
@@ -61,50 +61,40 @@ public class UserItemReader implements ItemReader<UserDTO> {
 
     @Override
     public UserDTO read() {
-        int positionColumnIndex = 0;
-
-        // Pular todas as linhas antes da linha 6
+        // Start reading from the second row (headers are on the first row)
         if (currentRow < 2) {
-            currentRow = 2;  // Força começar a leitura da linha 6
+            currentRow = 2;
         }
 
         if (currentRow > sheet.getLastRowNum()) {
-            logger.info("Fim da leitura: Nenhuma linha mais encontrada.");
+            logger.info("End of file: No more rows to read.");
             return null;
         }
 
         Row row = sheet.getRow(currentRow++);
         if (row == null || ExcelUtil.isRowEmpty(row)) {
-            return read();  // Pula linhas vazias
+            return read();  // Skip empty rows
         }
 
         UserDTO userDTO = new UserDTO();
 
-        logger.debug("Processando a linha {}", currentRow - 1);
+        logger.debug("Processing row {}", currentRow - 1);
 
-//        IntStream.range(0, 39)
-//                .forEach(i -> {
-//                    Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-//                    String cellValue = ExcelUtil.getCellValueAsString(cell).trim();  // Aplica trim() para remover espaços no início e no fim
-//                    logger.debug("Coluna {}: valor = {}", i, cellValue);
-//
-//                    // Verifica se estamos na coluna de 'position'
-//                    if (i == positionColumnIndex) {  // Ajuste para o índice correto da coluna 'position'
-//                        String positionValue = cellValue;
-//                        if (!positionValue.isEmpty()) {
-//                            userDTO.setPosition(EnumUtil.getPositionEnum(positionValue));
-//                        }
-//                    }
-//
-//                    // Continua o mapeamento de outras colunas no DTO, já com o valor tratado
-//                    cellMapper.map(userDTO, i, cellValue);
-//                });
+        // Map each column using the CellMapper
+        IntStream.range(0, 14).forEach(i -> {
+            Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+            String cellValue = ExcelUtil.getCellValueAsString(cell).trim();  // Trim spaces
 
-        System.out.println("userDTO reader: " + userDTO);
+            logger.debug("Column {}: value = {}", i, cellValue);
+
+            // Map the value from the cell to the appropriate field in UserDTO using CellMapper
+            cellMapper.map(userDTO, i, cellValue);
+        });
+
+        logger.debug("Mapped UserDTO: {}", userDTO);
+        System.out.println("my reader: " + userDTO);
         return userDTO;
     }
-
-
 
 
 }
