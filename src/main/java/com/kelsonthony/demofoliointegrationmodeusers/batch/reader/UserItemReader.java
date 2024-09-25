@@ -2,6 +2,7 @@ package com.kelsonthony.demofoliointegrationmodeusers.batch.reader;
 
 import com.kelsonthony.demofoliointegrationmodeusers.app.dto.UserDTO;
 
+import com.kelsonthony.demofoliointegrationmodeusers.app.dto.UserExcelDTO;
 import com.kelsonthony.demofoliointegrationmodeusers.infrastructure.mapper.CellMapper;
 import com.kelsonthony.demofoliointegrationmodeusers.infrastructure.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.*;
@@ -20,7 +21,7 @@ import java.util.stream.IntStream;
 
 @Component
 @Scope(value = "step", proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class UserItemReader implements ItemReader<UserDTO> {
+public class UserItemReader implements ItemReader<UserExcelDTO> {
 
     private static final Logger logger = LoggerFactory.getLogger(UserItemReader.class);
 
@@ -37,9 +38,9 @@ public class UserItemReader implements ItemReader<UserDTO> {
     @Value("${report.input.filepath}")
     private String inputFilepath;
 
-    private final CellMapper<UserDTO, Void, Integer> cellMapper;
+    private final CellMapper<UserExcelDTO, Void, Integer> cellMapper;
 
-    public UserItemReader(CellMapper<UserDTO, Void, Integer> cellMapper) {
+    public UserItemReader(CellMapper<UserExcelDTO, Void, Integer> cellMapper) {
         this.cellMapper = cellMapper;
     }
 
@@ -60,7 +61,7 @@ public class UserItemReader implements ItemReader<UserDTO> {
     }
 
     @Override
-    public UserDTO read() {
+    public UserExcelDTO read() {
         // Start reading from the second row (headers are on the first row)
         if (currentRow < 2) {
             currentRow = 2;
@@ -76,25 +77,23 @@ public class UserItemReader implements ItemReader<UserDTO> {
             return read();  // Skip empty rows
         }
 
-        UserDTO userDTO = new UserDTO();
+        UserExcelDTO userExcelDTO = new UserExcelDTO();
 
         logger.debug("Processing row {}", currentRow - 1);
 
         // Map each column using the CellMapper
-        IntStream.range(0, 14).forEach(i -> {
+        IntStream.range(0, 24).forEach(i -> {
             Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
             String cellValue = ExcelUtil.getCellValueAsString(cell).trim();  // Trim spaces
 
             logger.debug("Column {}: value = {}", i, cellValue);
 
-            // Map the value from the cell to the appropriate field in UserDTO using CellMapper
-            cellMapper.map(userDTO, i, cellValue);
+            // Map the value from the cell to the appropriate field in UserExcelDTO using CellMapper
+            cellMapper.map(userExcelDTO, i, cellValue);
         });
 
-        logger.debug("Mapped UserDTO: {}", userDTO);
-        System.out.println("my reader: " + userDTO);
-        return userDTO;
+        logger.debug("Mapped UserExcelDTO: {}", userExcelDTO);
+        System.out.println("my userExcelDTO reader: " + userExcelDTO);
+        return userExcelDTO;
     }
-
-
 }

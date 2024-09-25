@@ -1,6 +1,7 @@
 package com.kelsonthony.demofoliointegrationmodeusers.infrastructure.config;
 
 import com.kelsonthony.demofoliointegrationmodeusers.app.dto.UserDTO;
+import com.kelsonthony.demofoliointegrationmodeusers.app.dto.UserExcelDTO;
 import com.kelsonthony.demofoliointegrationmodeusers.batch.writer.UserItemWriter;
 import com.kelsonthony.demofoliointegrationmodeusers.infrastructure.partition.ColumnRangePartitioner;
 import org.springframework.batch.core.Job;
@@ -35,8 +36,8 @@ public class BatchJobConfig {
     private final SkipPolicy skipPolicy;
     private final SkipListener<UserDTO, Number> skipListener;
     private final JobExecutionListener jobCompletionListener;
-    private final ItemProcessor<UserDTO, UserDTO> processor;
-    private final ItemReader<UserDTO> reader;
+    private final ItemProcessor<UserExcelDTO, UserDTO> processor; // Altere o tipo aqui
+    private final ItemReader<UserExcelDTO> reader; // Continua como UserExcelDTO
 
     public BatchJobConfig(JobRepository jobRepository,
                           PlatformTransactionManager transactionManager,
@@ -45,8 +46,8 @@ public class BatchJobConfig {
                           SkipPolicy skipPolicy,
                           SkipListener<UserDTO, Number> skipListener,
                           JobExecutionListener jobCompletionListener,
-                          ItemProcessor<UserDTO, UserDTO> processor,
-                          ItemReader<UserDTO> reader) {
+                          ItemProcessor<UserExcelDTO, UserDTO> processor,  // Altere o tipo aqui
+                          ItemReader<UserExcelDTO> reader) {
         this.jobRepository = jobRepository;
         this.transactionManager = transactionManager;
         this.userItemWriter = userItemWriter;
@@ -87,10 +88,10 @@ public class BatchJobConfig {
     @Bean
     public Step slaveStep() {
         return new StepBuilder("slaveStep", jobRepository)
-                .<UserDTO, UserDTO>chunk(1000, transactionManager)
-                .reader(reader)
-                .processor(processor)
-                .writer(userItemWriter)
+                .<UserExcelDTO, UserDTO>chunk(1000, transactionManager)  // Modificação: tipos UserExcelDTO para UserDTO
+                .reader(reader)  // Lê UserExcelDTO
+                .processor(processor)  // Processa UserExcelDTO -> UserDTO
+                .writer(userItemWriter)  // Escreve UserDTO
                 .faultTolerant()
                 .skipPolicy(skipPolicy)
                 .listener(skipListener)
