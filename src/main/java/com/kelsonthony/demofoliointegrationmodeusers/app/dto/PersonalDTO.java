@@ -11,7 +11,7 @@ public class PersonalDTO {
     private String middleName;
     private String lastName;
     private String preferredFirstName;
-    private String dateOfBirth;
+    private String dateOfBirth; // Formato esperado: "YYYY-MM-DD"
     private String email;
     private String phone;
     private String mobilePhone;

@@ -62,12 +62,12 @@ public class UserItemReader implements ItemReader<UserExcelDTO> {
 
     @Override
     public UserExcelDTO read() {
-        // Start reading from the second row (headers are on the first row)
-        if (currentRow < 2) {
-            currentRow = 2;
+        // Start reading from the first row instead of skipping directly to row 2
+        if (currentRow < minValue) {
+            currentRow = minValue;
         }
 
-        if (currentRow > sheet.getLastRowNum()) {
+        if (currentRow > maxRow || currentRow > sheet.getLastRowNum()) {
             logger.info("End of file: No more rows to read.");
             return null;
         }
@@ -96,4 +96,5 @@ public class UserItemReader implements ItemReader<UserExcelDTO> {
         System.out.println("my userExcelDTO reader: " + userExcelDTO);
         return userExcelDTO;
     }
+
 }

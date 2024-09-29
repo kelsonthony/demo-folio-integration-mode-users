@@ -7,8 +7,8 @@ import com.kelsonthony.demofoliointegrationmodeusers.app.dto.UserExcelDTO;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Component
 public class UserItemProcessor implements ItemProcessor<UserExcelDTO, UserDTO> {
@@ -51,10 +51,17 @@ public class UserItemProcessor implements ItemProcessor<UserExcelDTO, UserDTO> {
         userDTO.setBarcode(userExcelDTO.getBarcode());
         userDTO.setEnrollmentDate(userExcelDTO.getEnrollmentDate());
         userDTO.setExternalSystemId(userExcelDTO.getExternalSystemId());
-        userDTO.setDepartments(List.of(userExcelDTO.getDepartments().split(",")));
+
+        // Verificar se departments está vazio ou nulo e definir uma lista vazia
+        if (userExcelDTO.getDepartments() == null || userExcelDTO.getDepartments().isEmpty()) {
+            userDTO.setDepartments(new ArrayList<>()); // Define uma lista vazia
+        } else {
+            userDTO.setDepartments(List.of(userExcelDTO.getDepartments().split(",")));
+        }
 
         System.out.println("UserDTO Processor: " + userDTO);
 
         return userDTO;
     }
+
 }
