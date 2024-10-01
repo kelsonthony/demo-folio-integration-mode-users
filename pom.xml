@@ -28,7 +28,7 @@
     </scm>
     <properties>
         <java.version>21</java.version>
-        <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
+<!--        <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>-->
         <poi-ooxml.version>5.2.3</poi-ooxml.version> <!-- change for <version>5.3.0</version> -->
         <modelmapper.version>2.4.4</modelmapper.version>
         <postgres.version>42.2.5</postgres.version>
@@ -66,10 +66,16 @@
             <artifactId>poi-ooxml</artifactId>
             <version>${poi-ooxml.version}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springdoc</groupId>-->
+<!--            <artifactId>springdoc-openapi-ui</artifactId>-->
+<!--            <version>${springdoc-openapi-ui.version}</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>${springdoc-openapi-ui.version}</version>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.modelmapper</groupId>
@@ -86,6 +92,13 @@
             <artifactId>spring-batch-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <version>4.1.68.Final</version> <!-- Verifique a versão exata que você está usando -->
+            <classifier>osx-aarch_64</classifier>
+        </dependency>
+
     </dependencies>
 
     <build>

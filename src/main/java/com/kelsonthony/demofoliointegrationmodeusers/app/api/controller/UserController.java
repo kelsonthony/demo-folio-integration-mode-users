@@ -4,6 +4,7 @@ import com.kelsonthony.demofoliointegrationmodeusers.app.api.openapi.UserControl
 import com.kelsonthony.demofoliointegrationmodeusers.app.dto.JobExecutionDTO;
 import com.kelsonthony.demofoliointegrationmodeusers.app.dto.StepExecutionDTO;
 import com.kelsonthony.demofoliointegrationmodeusers.infrastructure.listener.CustomJobExecutionListener;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "User Batch Operations", description = "API para iniciar e gerenciar operações de batch relacionadas a usuários.")
 public class UserController implements UserControllerOpenApi {
 
     private final JobLauncher jobLauncher;
